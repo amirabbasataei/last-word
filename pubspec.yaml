@@ -1,7 +1,7 @@
 name: last_word
 description: "Last Word — Word Chain Timer Game"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.10.4
@@ -22,3 +22,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/words_fa.txt
