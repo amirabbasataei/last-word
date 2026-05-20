@@ -1,29 +1,25 @@
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
 abstract class IDictionaryService {
-  Future<bool> isValidWord(String word);
+  Future<void> init();
+  bool isValidWord(String word);
 }
 
-class DictionaryService implements IDictionaryService {
-  DictionaryService({http.Client? client}) : _client = client ?? http.Client();
+class PersianDictionaryService implements IDictionaryService {
+  Set<String> _words = {};
 
-  final http.Client _client;
-  static const String _baseUrl =
-      'https://api.dictionaryapi.dev/api/v2/entries/en';
-
-  /// Returns true if [word] is a real English word.
-  /// Falls back to true on network errors to avoid punishing players on slow connections.
   @override
-  Future<bool> isValidWord(String word) async {
-    try {
-      final uri = Uri.parse('$_baseUrl/${Uri.encodeComponent(word.toLowerCase())}');
-      final response = await _client
-          .get(uri)
-          .timeout(const Duration(seconds: 5));
-      return response.statusCode == 200;
-    } catch (_) {
-      // Offline or timeout — accept the word
-      return true;
-    }
+  Future<void> init() async {
+    final raw = await rootBundle.loadString('assets/words_fa.txt');
+    _words = raw
+        .split('\n')
+        .map((w) => w.trim())
+        .where((w) => w.isNotEmpty)
+        .toSet();
+  }
+
+  @override
+  bool isValidWord(String word) {
+    return _words.contains(word.trim());
   }
 }
