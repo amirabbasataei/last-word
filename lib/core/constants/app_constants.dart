@@ -14,10 +14,30 @@ class AppConstants {
 
   // Seed words (must all be lowercase)
   static const List<String> seedWords = [
-    'apple', 'brave', 'cloud', 'dance', 'eagle',
-    'flame', 'grape', 'horse', 'igloo', 'jungle',
-    'knife', 'lemon', 'magic', 'night', 'ocean',
-    'plane', 'queen', 'river', 'storm', 'tiger',
-    'ultra', 'voice', 'wheat', 'xenon', 'yacht',
+    'سلام',    // ends با م
+    'کتاب',    // ends با ب
+    'خانه',    // ends با ه
+    'درس',     // ends با س
+    'آموزش',   // ends با ش
+    'روز',     // ends با ز
+    'دوست',    // ends با ت
+    'کار',     // ends با ر
+    'بازی',    // ends با ی
+    'ماشین',   // ends با ن
+    'نان',     // ends با ن
+    'چای',     // ends با ی
+    'باران',   // ends با ن
+    'آتش',     // ends با ش
+    'دریا',    // ends با ا
+    'کوه',     // ends با ه
+    'گل',      // ends با ل
+    'مرغ',     // ends با غ
+    'پرنده',   // ends با ه
+    'زمین',    // ends با ن
+    'آسمان',   // ends با ن
+    'رنگ',     // ends با گ
+    'میز',     // ends با ز
+    'صندلی',   // ends با ی
+    'پنجره',   // ends با ه
   ];
 }

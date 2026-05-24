@@ -25,13 +25,14 @@ class _WordInputWidgetState extends State<WordInputWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _focusNode.requestFocus());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _focusNode.requestFocus());
   }
 
   @override
   void didUpdateWidget(WordInputWidget old) {
     super.didUpdateWidget(old);
-    // Clear the field and re-focus whenever the required letter changes.
+    // Clear and re-focus whenever the required letter changes (word accepted).
     if (old.requiredLetter != widget.requiredLetter) {
       _controller.clear();
       _focusNode.requestFocus();
@@ -59,15 +60,20 @@ class _WordInputWidgetState extends State<WordInputWidget> {
 
     return Column(
       children: [
+        // ── Prompt label ──────────────────────────────────────────────────
         Text(
-          'Type a word starting with',
+          'کلمه‌ای بنویس که با این حرف شروع شود',
+          textDirection: TextDirection.rtl,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurface.withOpacity(0.55),
           ),
         ),
         const SizedBox(height: 6),
+
+        // ── Required letter ───────────────────────────────────────────────
         Text(
-          '"${widget.requiredLetter}"',
+          '« ${widget.requiredLetter} »',
+          textDirection: TextDirection.rtl,
           style: theme.textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.primary,
@@ -75,22 +81,36 @@ class _WordInputWidgetState extends State<WordInputWidget> {
           ),
         ),
         const SizedBox(height: 20),
-        TextField(
-          controller: _controller,
-          focusNode: _focusNode,
-          enabled: widget.enabled,
-          autocorrect: false,
-          enableSuggestions: false,
-          textCapitalization: TextCapitalization.none,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _submit(),
-          decoration: InputDecoration(
-            hintText: '${widget.requiredLetter.toLowerCase()}...',
-            errorText: widget.errorMessage,
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.send_rounded),
-              onPressed: widget.enabled ? _submit : null,
-              tooltip: 'Submit',
+
+        // ── Text field ────────────────────────────────────────────────────
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            enabled: widget.enabled,
+
+            // Persian-specific settings
+            textDirection: TextDirection.rtl,
+            textAlign: TextAlign.right,
+            autocorrect: false,
+            enableSuggestions: false,
+            // TextCapitalization is irrelevant for Persian but harmless
+            textCapitalization: TextCapitalization.none,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+
+            onSubmitted: (_) => _submit(),
+            decoration: InputDecoration(
+              hintText: '${widget.requiredLetter}...',
+              hintTextDirection: TextDirection.rtl,
+              errorText: widget.errorMessage,
+              // Send button on the LEFT side (RTL layout)
+              prefixIcon: IconButton(
+                icon: const Icon(Icons.send_rounded),
+                onPressed: widget.enabled ? _submit : null,
+                tooltip: 'ارسال',
+              ),
             ),
           ),
         ),

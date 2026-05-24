@@ -43,9 +43,9 @@ class GameState extends Equatable {
 
   String? get wordErrorMessage {
     return switch (wordError) {
-      WordError.wrongLetter => 'Must start with "$requiredLetter"',
-      WordError.alreadyUsed => 'Already used!',
-      WordError.notAWord => 'Not a valid word',
+      WordError.wrongLetter => 'کلمه باید با «$requiredLetter» شروع شود',
+      WordError.alreadyUsed => 'این کلمه قبلاً استفاده شده!',
+      WordError.notAWord => 'این کلمه در فرهنگ لغت یافت نشد',
       null => null,
     };
   }

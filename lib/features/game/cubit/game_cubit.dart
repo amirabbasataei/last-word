@@ -43,11 +43,12 @@ class GameCubit extends Cubit<GameState> {
   Future<void> submitWord(String raw) async {
     if (state.status != GameStatus.playing) return;
 
-    final word = raw.trim().toLowerCase();
+    // Persian words are not case-sensitive, but normalise whitespace
+    final word = raw.trim();
     if (word.isEmpty) return;
 
-    // ── Local checks (instant, no network needed) ──
-    if (!word.startsWith(state.requiredLetter.toLowerCase())) {
+    // ── Local checks ──────────────────────────────────────────────────────
+    if (!word.startsWith(state.requiredLetter)) {
       emit(state.copyWith(wordError: WordError.wrongLetter));
       return;
     }
@@ -56,7 +57,7 @@ class GameCubit extends Cubit<GameState> {
       return;
     }
 
-    // ── Pause timer while we hit the API ──
+    // ── Pause timer & validate ────────────────────────────────────────────
     _cancelTimer();
     emit(state.copyWith(
       status: GameStatus.validating,
@@ -64,8 +65,7 @@ class GameCubit extends Cubit<GameState> {
     ));
 
     final isReal = await _dictionaryService.isValidWord(word);
-
-    if (isClosed) return; // cubit was closed mid-await
+    if (isClosed) return;
 
     if (!isReal) {
       emit(state.copyWith(
@@ -76,7 +76,7 @@ class GameCubit extends Cubit<GameState> {
       return;
     }
 
-    // ── Accept the word ──
+    // ── Accept the word ───────────────────────────────────────────────────
     final newScore = state.score + 1;
     final newMax = _calculateMaxTime(newScore);
     final nextLetter = _lastLetterOf(word);
@@ -95,14 +95,15 @@ class GameCubit extends Cubit<GameState> {
     _startCountdown();
   }
 
-  // ─── Timer internals ───────────────────────────────────────────────────────
+  // ─── Timer ─────────────────────────────────────────────────────────────────
 
   void _startCountdown() {
     _cancelTimer();
     _countdownTimer = Timer.periodic(
       Duration(milliseconds: AppConstants.timerTickMilliseconds),
       (_) {
-        final next = state.timeLeft - AppConstants.timerTickMilliseconds / 1000;
+        final next =
+            state.timeLeft - AppConstants.timerTickMilliseconds / 1000;
         if (next <= 0) {
           _cancelTimer();
           _endGame();
@@ -122,9 +123,7 @@ class GameCubit extends Cubit<GameState> {
     final currentScore = state.score;
     final highScore = await _storageService.getHighScore();
     await _storageService.saveHighScoreIfBeaten(currentScore);
-
     if (isClosed) return;
-
     emit(state.copyWith(
       status: GameStatus.gameOver,
       isNewRecord: currentScore > highScore,
@@ -133,15 +132,19 @@ class GameCubit extends Cubit<GameState> {
 
   // ─── Helpers ───────────────────────────────────────────────────────────────
 
-  /// Timer shrinks by [timerDecrementPerWord] per correct word, clamped to min.
   double _calculateMaxTime(int score) {
     return (AppConstants.initialTimerSeconds -
             score * AppConstants.timerDecrementPerWord)
         .clamp(AppConstants.minTimerSeconds, AppConstants.initialTimerSeconds);
   }
 
-  String _lastLetterOf(String word) =>
-      word[word.length - 1].toUpperCase();
+  /// Returns the last meaningful letter of a Persian word.
+  /// Strips trailing ZWNJ (U+200C) and whitespace first, since some
+  /// word lists include a trailing zero-width non-joiner that is not a letter.
+  String _lastLetterOf(String word) {
+    final cleaned = word.trimRight().replaceAll('\u200C', '');
+    return cleaned[cleaned.length - 1];
+  }
 
   String _randomSeed() {
     final rng = Random();
