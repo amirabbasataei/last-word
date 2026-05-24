@@ -65,7 +65,7 @@ class _WordInputWidgetState extends State<WordInputWidget> {
           'کلمه‌ای بنویس که با این حرف شروع شود',
           textDirection: TextDirection.rtl,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.55),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
           ),
         ),
         const SizedBox(height: 6),

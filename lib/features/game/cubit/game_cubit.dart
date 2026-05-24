@@ -64,7 +64,7 @@ class GameCubit extends Cubit<GameState> {
       clearWordError: true,
     ));
 
-    final isReal = await _dictionaryService.isValidWord(word);
+    final isReal = _dictionaryService.isValidWord(word);
     if (isClosed) return;
 
     if (!isReal) {

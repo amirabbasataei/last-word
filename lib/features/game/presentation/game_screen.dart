@@ -119,7 +119,7 @@ class _GameView extends StatelessWidget {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.55),
+                                        .withValues(alpha: 0.55),
                                   ),
                         ),
                       ],

@@ -34,7 +34,7 @@ class TimerWidget extends StatelessWidget {
               value: progress,
               strokeWidth: 8,
               strokeCap: StrokeCap.round,
-              backgroundColor: color.withOpacity(0.12),
+              backgroundColor: color.withValues(alpha: 0.12),
               valueColor: AlwaysStoppedAnimation<Color>(color),
             ),
           ),

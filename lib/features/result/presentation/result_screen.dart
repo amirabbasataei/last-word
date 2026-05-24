@@ -95,7 +95,7 @@ class _ResultContent extends StatelessWidget {
                 Text(
                   state.score == 1 ? 'word' : 'words',
                   style: theme.textTheme.titleLarge?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.45),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
                   ),
                 ),
               ],
@@ -132,7 +132,7 @@ class _ResultContent extends StatelessWidget {
             Text(
               'Your chain',
               style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.45),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
               ),
             ),
             const SizedBox(height: 10),
@@ -141,7 +141,7 @@ class _ResultContent extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: state.words.length - 1,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
                 itemBuilder: (context, i) {
                   final word = state.words[i + 1];
                   return Container(
@@ -189,9 +189,9 @@ class _NewRecordBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.amber.withOpacity(0.12),
+        color: Colors.amber.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.amber.withOpacity(0.4)),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.4)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -231,7 +231,7 @@ class _StatCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.15),
+          color: theme.colorScheme.outline.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -248,7 +248,7 @@ class _StatCard extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.55),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
             ),
           ),
         ],

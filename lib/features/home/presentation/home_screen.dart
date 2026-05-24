@@ -46,7 +46,7 @@ class _HomeView extends StatelessWidget {
               Text(
                 'Type a word starting with the last letter.\nBeat the clock.',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.55),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
                   height: 1.5,
                 ),
               ),
@@ -128,7 +128,7 @@ class _RulesCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.15),
+          color: theme.colorScheme.outline.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -179,7 +179,7 @@ class _RuleRow extends StatelessWidget {
             child: Text(
               text,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.65),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                 height: 1.4,
               ),
             ),

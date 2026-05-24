@@ -48,7 +48,7 @@ class _WordChainWidgetState extends State<WordChainWidget> {
         Text(
           'Word chain',
           style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.45),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
             letterSpacing: 0.5,
           ),
         ),
@@ -59,7 +59,7 @@ class _WordChainWidgetState extends State<WordChainWidget> {
               ? Text(
                   'Your words will appear here…',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.35),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
                     fontStyle: FontStyle.italic,
                   ),
                 )
@@ -67,7 +67,7 @@ class _WordChainWidgetState extends State<WordChainWidget> {
                   controller: _scrollController,
                   scrollDirection: Axis.horizontal,
                   itemCount: visibleWords.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
                   itemBuilder: (context, index) {
                     final isLatest = index == visibleWords.length - 1;
                     return AnimatedContainer(
@@ -81,7 +81,7 @@ class _WordChainWidgetState extends State<WordChainWidget> {
                         borderRadius: BorderRadius.circular(20),
                         border: isLatest
                             ? Border.all(
-                                color: theme.colorScheme.primary.withOpacity(0.3),
+                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                               )
                             : null,
                       ),
@@ -92,7 +92,7 @@ class _WordChainWidgetState extends State<WordChainWidget> {
                               isLatest ? FontWeight.w600 : FontWeight.normal,
                           color: isLatest
                               ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface.withOpacity(0.65),
+                              : theme.colorScheme.onSurface.withValues(alpha: 0.65),
                         ),
                       ),
                     );
