@@ -7,12 +7,17 @@ class WordInputWidget extends StatefulWidget {
     required this.enabled,
     required this.onSubmit,
     this.errorMessage,
+    this.isValidWord,
   });
 
   final String requiredLetter;
   final bool enabled;
   final void Function(String word) onSubmit;
   final String? errorMessage;
+
+  /// Optional synchronous lookup called on every keystroke.
+  /// Returns true if the typed word exists in the dictionary.
+  final bool Function(String word)? isValidWord;
 
   @override
   State<WordInputWidget> createState() => _WordInputWidgetState();
@@ -22,9 +27,15 @@ class _WordInputWidgetState extends State<WordInputWidget> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
+  /// null  → field is empty, show no indicator
+  /// true  → word found in dictionary
+  /// false → word not found in dictionary
+  bool? _wordExists;
+
   @override
   void initState() {
     super.initState();
+    _controller.addListener(_onTextChanged);
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _focusNode.requestFocus());
   }
@@ -35,7 +46,22 @@ class _WordInputWidgetState extends State<WordInputWidget> {
     // Clear and re-focus whenever the required letter changes (word accepted).
     if (old.requiredLetter != widget.requiredLetter) {
       _controller.clear();
+      // _onTextChanged will fire via the listener and reset _wordExists.
       _focusNode.requestFocus();
+    }
+  }
+
+  void _onTextChanged() {
+    final text = _controller.text.trim();
+
+    if (text.isEmpty || widget.isValidWord == null) {
+      if (_wordExists != null) setState(() => _wordExists = null);
+      return;
+    }
+
+    final exists = widget.isValidWord!(text);
+    if (exists != _wordExists) {
+      setState(() => _wordExists = exists);
     }
   }
 
@@ -49,6 +75,7 @@ class _WordInputWidgetState extends State<WordInputWidget> {
 
   @override
   void dispose() {
+    _controller.removeListener(_onTextChanged);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -57,6 +84,23 @@ class _WordInputWidgetState extends State<WordInputWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    // ── Suffix icon based on real-time dictionary check ──────────────────
+    Widget? suffixIcon;
+    if (_wordExists != null) {
+      suffixIcon = Padding(
+        padding: const EdgeInsetsDirectional.only(end: 12),
+        child: Icon(
+          _wordExists!
+              ? Icons.check_circle_rounded
+              : Icons.cancel_rounded,
+          color: _wordExists!
+              ? Colors.green.shade600
+              : theme.colorScheme.error,
+          size: 22,
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -95,7 +139,6 @@ class _WordInputWidgetState extends State<WordInputWidget> {
             textAlign: TextAlign.right,
             autocorrect: false,
             enableSuggestions: false,
-            // TextCapitalization is irrelevant for Persian but harmless
             textCapitalization: TextCapitalization.none,
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
@@ -111,6 +154,8 @@ class _WordInputWidgetState extends State<WordInputWidget> {
                 onPressed: widget.enabled ? _submit : null,
                 tooltip: 'ارسال',
               ),
+              // ✓ / ✗ on the RIGHT side (RTL layout = visually on the left)
+              suffixIcon: suffixIcon,
             ),
           ),
         ),

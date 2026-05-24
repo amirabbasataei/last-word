@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:last_word/core/services/dictionary_service.dart';
 
 import '../../../app/router/app_router.dart';
+import '../../../core/services/dictionary_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../cubit/game_cubit.dart';
 import '../cubit/game_state.dart';
@@ -17,8 +17,8 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => GameCubit(
-        dictionaryService: PersianDictionaryService(),
+      create: (ctx) => GameCubit(
+        dictionaryService: ctx.read<IDictionaryService>(),
         storageService: StorageService(),
       )..startGame(),
       child: const _GameView(),
@@ -89,6 +89,7 @@ class _GameView extends StatelessWidget {
                     enabled: data.enabled,
                     errorMessage: data.error,
                     onSubmit: context.read<GameCubit>().submitWord,
+                    isValidWord: context.read<IDictionaryService>().isValidWord,
                   ),
                 ),
                 const SizedBox(height: 16),
